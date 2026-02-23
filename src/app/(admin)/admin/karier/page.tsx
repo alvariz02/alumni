@@ -1115,10 +1115,8 @@ export default function AdminKarierPage() {
                   </div>
                 </form>
               )}
-            )}
           </div>
         </DialogContent>
       </Dialog>
-    </div>
-  )
+    </div>  )
 }

@@ -20,16 +20,21 @@ export function useTheme() {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light")
+  const [theme, setTheme] = useState<Theme>(() => {
+    // Initialize theme from localStorage on component mount
+    if (typeof window !== "undefined") {
+      const savedTheme = localStorage.getItem("admin-theme") as Theme | null
+      if (savedTheme) {
+        return savedTheme
+      }
+    }
+    return "light"
+  })
 
   useEffect(() => {
-    // Get theme from localStorage or default to light
-    const savedTheme = localStorage.getItem("admin-theme") as Theme
-    if (savedTheme) {
-      setTheme(savedTheme)
-      document.documentElement.classList.toggle("dark", savedTheme === "dark")
-    }
-  }, [])
+    // Apply theme to document
+    document.documentElement.classList.toggle("dark", theme === "dark")
+  }, [theme])
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light"

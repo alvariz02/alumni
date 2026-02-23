@@ -88,6 +88,18 @@ export default function KarierPage() {
   const [saving, setSaving] = useState(false)
   const [careerHistory, setCareerHistory] = useState<CareerData[]>([])
   const [showForm, setShowForm] = useState(false)
+  const [formData, setFormData] = useState({
+    status: "",
+    namaPerusahaan: "",
+    jabatan: "",
+    sektorIndustri: "",
+    kotaKerja: "",
+    provinsiKerja: "",
+    negaraKerja: "Indonesia",
+    rentangGaji: "",
+    isSesuaiBidang: "",
+    tanggalMulai: "",
+  })
 
   useEffect(() => {
     console.log("🔐 Karier Page - Status:", status, "Role:", session?.user?.role)
@@ -150,19 +162,6 @@ export default function KarierPage() {
       </div>
     )
   }
-
-  const [formData, setFormData] = useState({
-    status: "",
-    namaPerusahaan: "",
-    jabatan: "",
-    sektorIndustri: "",
-    kotaKerja: "",
-    provinsiKerja: "",
-    negaraKerja: "Indonesia",
-    rentangGaji: "",
-    isSesuaiBidang: "",
-    tanggalMulai: "",
-  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
