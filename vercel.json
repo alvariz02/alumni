@@ -6,11 +6,11 @@
   "regions": ["sin1"],
   "build": {
     "env": {
-      "NEXTAUTH_SECRET": "@nextauth_secret",
-      "DATABASE_URL": "@database_url",
-      "NEXTAUTH_URL": "@nextauth_url",
-      "NEXT_PUBLIC_SUPABASE_URL": "@supabase_url",
-      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase_anon_key"
+      "NEXTAUTH_SECRET": "s/EmkpSSkNh1pndx3rA/4y110fXlRg/shkLRGn5oJZQ=",
+      "DATABASE_URL": "postgresql://postgres:alumniunipaskeren@db.qosnfemixppvsdgigppu.supabase.co:5432/postgres",
+      "NEXTAUTH_URL": "https://kp-alumni.vercel.app",
+      "NEXT_PUBLIC_SUPABASE_URL": "https://qosnfemixppvsdgigppu.supabase.co",
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_BttjWXE2tHftlsHHOtHvKg_eC45aoV5"
     }
   },
   "functions": {
