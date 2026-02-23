@@ -4,9 +4,6 @@
   "installCommand": "npm install --legacy-peer-deps",
   "framework": "nextjs",
   "regions": ["sin1"],
-  "build": {
-    "commandPath": "packages/nextjs"
-  },
   "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 30
