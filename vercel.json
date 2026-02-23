@@ -5,13 +5,7 @@
   "framework": "nextjs",
   "regions": ["sin1"],
   "build": {
-    "env": {
-      "NEXTAUTH_SECRET": "s/EmkpSSkNh1pndx3rA/4y110fXlRg/shkLRGn5oJZQ=",
-      "DATABASE_URL": "postgresql://postgres.qosnfemixppvsdgigppu:alumniunipaskeren@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres",
-      "NEXTAUTH_URL": "https://tracer-alumni-opal.vercel.app/",
-      "NEXT_PUBLIC_SUPABASE_URL": "https://qosnfemixppvsdgigppu.supabase.co",
-      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_BttjWXE2tHftlsHHOtHvKg_eC45aoV5"
-    }
+    "commandPath": "packages/nextjs"
   },
   "functions": {
     "app/api/**/*.ts": {
