@@ -18,10 +18,15 @@ const registerSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    console.log("📝 Register endpoint called")
     const body = await request.json()
+    console.log("📝 Request body:", { ...body, password: "***" })
+    
     const validatedData = registerSchema.parse(body)
+    console.log("✅ Validation passed for:", validatedData.email)
 
     // Check if NIM already exists
+    console.log("🔍 Checking NIM:", validatedData.nim)
     const existingNIM = await db.alumni.findUnique({
       where: { nim: validatedData.nim },
     })
@@ -95,7 +100,11 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error: any) {
-    console.error("Registration error:", error)
+    console.error("❌ Registration error:", error)
+    console.error("Error name:", error?.name)
+    console.error("Error message:", error?.message)
+    console.error("Error code:", error?.code)
+    console.error("Full error:", JSON.stringify(error, null, 2))
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
