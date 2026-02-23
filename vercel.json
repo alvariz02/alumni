@@ -1,16 +1,9 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": ".next/standalone",
+  "outputDirectory": ".next",
   "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["sin1"],
-  "env": {
-    "NEXTAUTH_SECRET": "@nextauth_secret",
-    "DATABASE_URL": "@database_url",
-    "NEXTAUTH_URL": "@nextauth_url",
-    "NEXT_PUBLIC_SUPABASE_URL": "@supabase_url",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase_anon_key"
-  },
   "build": {
     "env": {
       "NEXTAUTH_SECRET": "@nextauth_secret",
