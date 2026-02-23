@@ -1,0 +1,224 @@
+// This is your Prisma schema file for PostgreSQL (Supabase Production)
+// To use this: 
+// 1. Copy this file to schema.prisma
+// 2. Run: npx prisma db push
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum ProfileVisibility {
+  PUBLIC
+  ALUMNI_ONLY
+  PRIVATE
+}
+
+enum CareerStatus {
+  BEKERJA
+  WIRAUSAHA
+  STUDI_LANJUT
+  BELUM_BEKERJA
+}
+
+enum EducationLevel {
+  S2
+  S3
+  PROFESI
+  DIPLOMA
+}
+
+enum AchievementType {
+  PENGHARGAAN
+  PUBLIKASI
+  SERTIFIKASI
+  LAINNYA
+}
+
+enum TestimonialStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum UserRole {
+  ALUMNI
+  ADMIN
+  PIMPINAN
+}
+
+// User table for authentication
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String?   // Hashed password for credentials login
+  role          UserRole  @default(ALUMNI)
+  image         String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  accounts      Account[]
+  sessions      Session[]
+  alumni        Alumni?   @relation(fields: [alumniId], references: [id], onDelete: Cascade)
+  alumniId      String?   @unique
+
+  @@map("users")
+}
+
+// NextAuth required tables
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String? @db.Text
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// Alumni profile table
+model Alumni {
+  id                 String            @id @default(cuid())
+  nim                String            @unique
+  nama               String
+  angkatan           Int
+  jurusan            String
+  prodi              String
+  email              String            @unique
+  noHp               String?
+  linkedinUrl        String?
+  kotaDomisili       String
+  provinsiDomisili   String
+  negaraDomisili     String            @default("Indonesia")
+  avatarUrl          String?
+  profileVisibility  ProfileVisibility @default(PUBLIC)
+  isVerified         Boolean           @default(false)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  // Relations
+  user               User?
+  karier             Karier[]
+  pendidikanLanjut   PendidikanLanjut[]
+  prestasi           Prestasi[]
+  testimoni          Testimoni[]
+  tracerStudy        TracerStudy[]
+
+  @@map("alumni")
+}
+
+// Career data table
+model Karier {
+  id               String       @id @default(cuid())
+  alumniId         String
+  status           CareerStatus
+  namaPerusahaan   String?
+  jabatan          String?
+  sektorIndustri   String?
+  kotaKerja        String?
+  provinsiKerja    String?
+  negaraKerja      String        @default("Indonesia")
+  rentangGaji      String?
+  isSesuaiBidang   Boolean?
+  tanggalMulai     DateTime?
+  isCurrent        Boolean       @default(true)
+  createdAt        DateTime      @default(now())
+
+  alumni           Alumni        @relation(fields: [alumniId], references: [id], onDelete: Cascade)
+
+  @@map("karier")
+}
+
+// Education continuation table
+model PendidikanLanjut {
+  id             String         @id @default(cuid())
+  alumniId       String
+  namaInstitusi  String
+  programStudi   String
+  jenjang        EducationLevel
+  negara         String
+  tahunMasuk     Int
+  isCurrent      Boolean        @default(true)
+
+  alumni         Alumni         @relation(fields: [alumniId], references: [id], onDelete: Cascade)
+
+  @@map("pendidikan_lanjut")
+}
+
+// Achievements table
+model Prestasi {
+  id            String         @id @default(cuid())
+  alumniId      String
+  tipe          AchievementType
+  judul         String
+  deskripsi     String?
+  tahun         Int
+  urlReferensi  String?
+
+  alumni        Alumni         @relation(fields: [alumniId], references: [id], onDelete: Cascade)
+
+  @@map("prestasi")
+}
+
+// Testimonials table
+model Testimoni {
+  id        String            @id @default(cuid())
+  alumniId  String
+  konten    String            @db.Text
+  status    TestimonialStatus @default(PENDING)
+  createdAt DateTime          @default(now())
+
+  alumni    Alumni            @relation(fields: [alumniId], references: [id], onDelete: Cascade)
+
+  @@map("testimoni")
+}
+
+// Tracer study / surveys
+model TracerStudy {
+  id          String   @id @default(cuid())
+  alumniId    String
+  surveyYear  Int
+  responses   Json     // Native PostgreSQL JSON type
+  submittedAt DateTime @default(now())
+
+  alumni      Alumni   @relation(fields: [alumniId], references: [id], onDelete: Cascade)
+
+  @@map("tracer_study")
+}
