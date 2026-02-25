@@ -17,10 +17,16 @@ import {
   Mail,
   ChevronLeft,
   ChevronRight,
+  X,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+} from "@/components/ui/sheet"
 
 const alumniNavItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -46,11 +52,15 @@ const pimpinanNavItems = [
   { href: "/analytics/angkatan", label: "Tren Angkatan", icon: BarChart3 },
 ]
 
-export function Sidebar() {
+export function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: boolean; setMobileOpen?: (value: boolean) => void }) {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
+  
+  // Use external state if provided, otherwise use internal state
+  const [internalOpenMobile, setInternalOpenMobile] = useState(false)
+  const openMobile = mobileOpen !== undefined ? mobileOpen : internalOpenMobile
+  const setOpenMobile = setMobileOpen !== undefined ? setMobileOpen : setInternalOpenMobile
 
-  // Determine role based on current path
   const getNavItems = () => {
     if (pathname.startsWith("/admin")) return adminNavItems
     if (pathname.startsWith("/analytics")) return pimpinanNavItems
@@ -60,33 +70,36 @@ export function Sidebar() {
   const navItems = getNavItems()
   const role = pathname.startsWith("/admin") ? "ADMIN" : pathname.startsWith("/analytics") ? "PIMPINAN" : "ALUMNI"
 
-  return (
-    <aside
-      className={cn(
-        "fixed left-0 top-0 z-40 h-screen border-r border-slate-200 bg-white transition-all duration-300 dark:border-slate-800 dark:bg-slate-950",
-        collapsed ? "w-16" : "w-64"
-      )}
-    >
+  const sidebarContent = (
+    <>
       <div className="flex h-full flex-col">
         {/* Logo */}
         <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4 dark:border-slate-800">
           {!collapsed && (
             <Link href="/" className="flex items-center gap-2">
               <GraduationCap className="h-6 w-6 text-blue-900" />
-              <span className="font-bold text-blue-900">AlumniKu</span>
+              <span className="font-bold text-sm sm:text-base text-blue-900">AlumniKu</span>
             </Link>
           )}
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setCollapsed(!collapsed)}
-            className="h-8 w-8"
+            className="h-8 w-8 hidden md:flex"
           >
             {collapsed ? (
               <ChevronRight className="h-4 w-4" />
             ) : (
               <ChevronLeft className="h-4 w-4" />
             )}
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setOpenMobile(false)}
+            className="h-8 w-8 md:hidden"
+          >
+            <X className="h-4 w-4" />
           </Button>
         </div>
 
@@ -99,8 +112,9 @@ export function Sidebar() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
+                    onClick={() => setOpenMobile(false)}
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors cursor-pointer",
                       isActive
                         ? "bg-blue-900 text-white"
                         : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
@@ -129,8 +143,9 @@ export function Sidebar() {
                     <li key={item.href}>
                       <Link
                         href={item.href}
+                        onClick={() => setOpenMobile(false)}
                         className={cn(
-                          "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                          "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors cursor-pointer",
                           isActive
                             ? "bg-blue-900 text-white"
                             : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
@@ -152,7 +167,7 @@ export function Sidebar() {
           <Button
             variant="ghost"
             className={cn(
-              "w-full justify-start gap-3 text-red-600 hover:bg-red-50 hover:text-red-700",
+              "w-full justify-start gap-3 text-red-600 hover:bg-red-50 hover:text-red-700 text-sm",
               collapsed && "justify-center"
             )}
             onClick={() => {
@@ -161,11 +176,35 @@ export function Sidebar() {
               window.location.href = "/login"
             }}
           >
-            <LogOut className="h-5 w-5" />
+            <LogOut className="h-5 w-5 flex-shrink-0" />
             {!collapsed && <span>Keluar</span>}
           </Button>
         </div>
       </div>
-    </aside>
+    </>
+  )
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <aside
+        className={cn(
+          "hidden md:flex fixed left-0 top-0 z-40 h-screen flex-col border-r border-slate-200 bg-white transition-all duration-300 dark:border-slate-800 dark:bg-slate-950",
+          collapsed ? "w-16" : "w-64"
+        )}
+      >
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile Sidebar - Sheet/Drawer */}
+      <Sheet open={openMobile} onOpenChange={setOpenMobile}>
+        <SheetContent side="left" className="w-64 p-0 md:hidden">
+          <SheetTitle className="sr-only">Menu Navigasi</SheetTitle>
+          <div className="h-full flex flex-col bg-white dark:bg-slate-950 overflow-hidden">
+            {sidebarContent}
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
   )
 }

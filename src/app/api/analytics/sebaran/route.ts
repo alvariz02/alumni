@@ -30,20 +30,24 @@ export async function GET() {
       _count: true,
     })
 
-    // Combine data
+    // Combine data - show all cities for each province
     const result = alumniByProvince.map((p) => {
       const cities = alumniByCity
         .filter((c) => c.provinsiDomisili === p.provinsiDomisili)
         .map((c) => ({ city: c.kotaDomisili, count: c._count }))
+        .sort((a, b) => b.count - a.count)
       
       const coords = provinceCoords[p.provinsiDomisili] || { lat: -2.5, lng: 118 }
       
+      const mainCity = cities.length > 0 ? cities[0].city : p.provinsiDomisili
+      
       return {
         province: p.provinsiDomisili,
-        city: cities[0]?.city || p.provinsiDomisili,
+        city: mainCity,
         count: p._count,
         lat: coords.lat,
         lng: coords.lng,
+        cities: cities,
       }
     })
 

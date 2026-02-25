@@ -20,16 +20,17 @@ export default function HomePage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-white">
             <GraduationCap className="h-8 w-8" />
-            <span className="text-xl font-bold">AlumniKu</span>
+            <span className="text-xl font-bold">Tracer Alumni</span>
+            <span className="text-blue-200">Universitas Pasifik Morotai UNIPAS</span>
           </div>
           <div className="flex gap-3">
             <Link href="/login">
-              <Button variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button variant="outline" className="border-white text-black hover:bg-white hover:text-blue-900 font-semibold">
                 Masuk
               </Button>
             </Link>
             <Link href="/register">
-              <Button className="bg-white text-blue-900 hover:bg-white/90">
+              <Button className="bg-white text-black hover:bg-blue-50 font-semibold">
                 Daftar
               </Button>
             </Link>
@@ -40,22 +41,22 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center text-white">
         <h1 className="text-4xl font-bold md:text-6xl">
-          Portal Alumni
+          Tracer Alumni
           <br />
-          <span className="text-blue-200">Universitas</span>
+          <span className="text-blue-200">Universitas Pasifik Morotai UNIPAS</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-blue-100">
-          Platform terintegrasi untuk mengelola data alumni, memantau perkembangan karier,
+          Platform tracer study untuk mengelola data alumni, memantau perkembangan karier,
           dan menghasilkan laporan analitik untuk keperluan akreditasi.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link href="/register">
-            <Button size="lg" className="bg-white text-blue-900 hover:bg-white/90 px-8">
+            <Button size="lg" className="bg-white text-black hover:bg-blue-50 font-semibold px-8">
               Daftar Sekarang
             </Button>
           </Link>
           <Link href="/login">
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 px-8">
+            <Button size="lg" variant="outline" className="border-white text-black hover:bg-white hover:text-blue-900 font-semibold px-8">
               Sudah Punya Akun?
             </Button>
           </Link>
@@ -150,10 +151,11 @@ export default function HomePage() {
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <div className="flex items-center gap-2 text-white">
             <GraduationCap className="h-6 w-6" />
-            <span className="font-semibold">AlumniKu</span>
+            <span className="font-semibold">Tracer Alumni</span>
+            <span className="text-blue-200">Universitas Pasifik Morotai UNIPAS</span>
           </div>
           <p className="text-sm text-blue-200">
-            © 2024 AlumniKu - Portal Alumni Universitas. Hak Cipta Dilindungi.
+            © 2024 Tracer Alumni - Portal Tracer Study Universitas Pasifik Morotai UNIPAS. Hak Cipta Dilindungi.
           </p>
         </div>
       </footer>

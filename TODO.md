@@ -1,19 +1,10 @@
-# Admin Dashboard UI Fix Plan
+# TODO: Fix Leadership Role Dashboard Filters
 
-## Issues to Fix:
-1. Header overlaps with sidebar (positioned at left-0 but should account for sidebar width)
-2. Collapsed state not synchronized between sidebar and layout
-3. Table overflow issues on smaller screens
-4. UI not visually pleasing
+## Task
+Fix the filtering per class (Angkatan) and per faculty (Fakultas) on the leadership role dashboard.
 
-## Tasks:
-- [ ] 1. Fix admin-layout.tsx - Remove local collapsed state, pass to children via context or props
-- [ ] 2. Fix admin-sidebar.tsx - Accept collapsed prop from parent
-- [ ] 3. Fix admin-header.tsx - Accept collapsed prop to adjust left position
-- [ ] 4. Fix dashboard/page.tsx - Improve table styling and overflow handling
+## Steps
+- [x] 1. Update API (`src/app/api/analytics/route.ts`) to accept filter parameters (fakultas, angkatan)
+- [x] 2. Update frontend (`src/app/(analytics)/analytics/page.tsx`) to add actual filtering functionality with both fakultas and angkatan filters
 
-## Dependent Files:
-- src/components/layout/admin-layout.tsx
-- src/components/layout/admin-sidebar.tsx
-- src/components/layout/admin-header.tsx
-- src/app/(admin)/admin/dashboard/page.tsx
+## Status: Completed

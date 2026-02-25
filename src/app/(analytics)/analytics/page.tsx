@@ -52,6 +52,10 @@ interface AnalyticsData {
   careerByIndustry: { industry: string; count: number }[]
   alumniByProvince: { province: string; count: number }[]
   salaryRanges: { range: string; count: number }[]
+  filterOptions: {
+    fakultas: string[]
+    angkatan: number[]
+  }
 }
 
 const COLORS = ["#1E3A8A", "#3B82F6", "#60A5FA", "#93C5FD", "#BFDBFE", "#DBEAFE"]
@@ -73,15 +77,25 @@ const statusLabels: Record<string, string> = {
 export default function AnalyticsDashboardPage() {
   const [data, setData] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [jurusanFilter, setJurusanFilter] = useState("all")
+  const [fakultasFilter, setFakultasFilter] = useState("all")
+  const [angkatanFilter, setAngkatanFilter] = useState("all")
 
   useEffect(() => {
     fetchAnalytics()
-  }, [])
+  }, [fakultasFilter, angkatanFilter])
 
   const fetchAnalytics = async () => {
     try {
-      const response = await fetch("/api/analytics")
+      setLoading(true)
+      // Build query params
+      const params = new URLSearchParams()
+      if (fakultasFilter !== "all") params.set("fakultas", fakultasFilter)
+      if (angkatanFilter !== "all") params.set("angkatan", angkatanFilter)
+      
+      const queryString = params.toString()
+      const url = queryString ? `/api/analytics?${queryString}` : "/api/analytics"
+      
+      const response = await fetch(url)
       if (response.ok) {
         const analyticsData = await response.json()
         setData(analyticsData)
@@ -131,19 +145,36 @@ export default function AnalyticsDashboardPage() {
           <h1 className="text-2xl font-bold">Dashboard Analytics</h1>
           <p className="text-slate-500">Analisis data alumni dan keterserapan kerja</p>
         </div>
-        <Select value={jurusanFilter} onValueChange={setJurusanFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Semua Fakultas" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Semua Fakultas</SelectItem>
-            {data.alumniByFakultas.map((j) => (
-              <SelectItem key={j.fakultas} value={j.fakultas}>
-                {j.fakultas}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex gap-2">
+          {/* Fakultas Filter */}
+          <Select value={fakultasFilter} onValueChange={setFakultasFilter}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Semua Fakultas" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Fakultas</SelectItem>
+              {data.filterOptions?.fakultas?.map((f: string) => (
+                <SelectItem key={f} value={f}>
+                  {f}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {/* Angkatan Filter */}
+          <Select value={angkatanFilter} onValueChange={setAngkatanFilter}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Semua Angkatan" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Angkatan</SelectItem>
+              {data.filterOptions?.angkatan?.map((a: number) => (
+                <SelectItem key={a} value={a.toString()}>
+                  {a}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Summary Cards */}

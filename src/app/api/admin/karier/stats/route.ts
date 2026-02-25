@@ -20,6 +20,7 @@ export async function GET(request: NextRequest) {
         id: true
       }
     })
+    console.log("✅ careerStats fetched", careerStats)
 
     const stats = {
       totalCareers: 0,
@@ -65,6 +66,7 @@ export async function GET(request: NextRequest) {
       },
       take: 5
     })
+    console.log("✅ topCompanies fetched", topCompanies)
 
     // Get career by fakultas
     const careerByFakultas = await db.alumni.findMany({
@@ -77,6 +79,7 @@ export async function GET(request: NextRequest) {
         }
       }
     })
+    console.log("✅ careerByFakultas fetched (count)", careerByFakultas.length)
 
     const fakultasStats = careerByFakultas.reduce((acc, alumni) => {
       const fakultas = alumni.fakultas
@@ -105,6 +108,7 @@ export async function GET(request: NextRequest) {
         id: true
       }
     })
+    console.log("✅ salaryStats fetched", salaryStats)
 
     return NextResponse.json({
       ...stats,

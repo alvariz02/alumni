@@ -1,6 +1,6 @@
 "use client"
 
-import { Bell, Search, User, LogOut, Moon, Sun } from "lucide-react"
+import { Bell, Search, User, LogOut, Moon, Sun, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -12,9 +12,10 @@ import { useState, useEffect, useRef } from "react"
 
 interface AdminHeaderProps {
   collapsed?: boolean
+  onMenuClick?: () => void
 }
 
-export function AdminHeader({ collapsed }: AdminHeaderProps) {
+export function AdminHeader({ collapsed, onMenuClick }: AdminHeaderProps) {
   const router = useRouter()
   const { theme, toggleTheme } = useTheme()
   const [searchQuery, setSearchQuery] = useState("")
@@ -92,30 +93,40 @@ export function AdminHeader({ collapsed }: AdminHeaderProps) {
 
   return (
     <header className={cn(
-      "fixed top-0 left-0 right-0 z-30 h-16 transition-colors duration-300",
+      "fixed top-0 z-30 h-16 transition-colors duration-300 right-0",
+      "left-0 md:left-64 md:transition-all duration-300",
+      collapsed && "md:left-16",
       theme === "dark" 
         ? "bg-slate-900 border-b border-slate-700" 
         : "bg-white border-b border-gray-200 shadow-sm"
     )}>
-      <div className="flex h-full items-center justify-between px-4">
+      <div className="flex h-full items-center justify-between px-3 sm:px-4 md:px-6">
+        {/* Mobile Menu Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onMenuClick}
+          className="md:hidden mr-2"
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+
         <div className={cn(
-          "flex items-center gap-4 transition-all duration-300",
-          collapsed ? "flex-1" : "flex-1 ml-64"
+          "flex items-center gap-2 sm:gap-4 flex-1 min-w-0"
         )}>
           <div className={cn(
-            "relative transition-all duration-300",
-            collapsed ? "max-w-lg flex-1" : "max-w-md flex-1"
+            "relative transition-all duration-300 w-full max-w-[180px] sm:max-w-md"
           )} ref={searchContainerRef}>
             <Search className={cn(
-              "absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2",
+              "absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 flex-shrink-0",
               theme === "dark" ? "text-slate-400" : "text-gray-400"
             )} />
             <Input
-              placeholder="Search alumni, data, or settings..."
+              placeholder="Cari..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={cn(
-                "pl-10 transition-colors",
+                "pl-10 pr-3 text-sm transition-colors",
                 theme === "dark"
                   ? "bg-slate-800 border-slate-700 text-white placeholder-slate-400 focus:ring-blue-500"
                   : "bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500"
@@ -132,10 +143,10 @@ export function AdminHeader({ collapsed }: AdminHeaderProps) {
               )}>
                 {isSearching ? (
                   <div className={cn(
-                    "p-4 text-center",
+                    "p-3 text-center text-sm",
                     theme === "dark" ? "text-slate-400" : "text-gray-500"
                   )}>
-                    Searching...
+                    Mencari...
                   </div>
                 ) : searchResults.length > 0 ? (
                   searchResults.map((result) => (
@@ -149,17 +160,17 @@ export function AdminHeader({ collapsed }: AdminHeaderProps) {
                           : "hover:bg-gray-50 border-gray-100"
                       )}
                     >
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg">{result.icon}</span>
-                        <div className="flex-1">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="text-lg flex-shrink-0">{result.icon}</span>
+                        <div className="flex-1 min-w-0">
                           <div className={cn(
-                            "font-medium",
+                            "font-medium text-sm truncate",
                             theme === "dark" ? "text-white" : "text-gray-900"
                           )}>
                             {result.title}
                           </div>
                           <div className={cn(
-                            "text-sm",
+                            "text-xs truncate",
                             theme === "dark" ? "text-slate-400" : "text-gray-500"
                           )}>
                             {result.subtitle}
@@ -170,10 +181,10 @@ export function AdminHeader({ collapsed }: AdminHeaderProps) {
                   ))
                 ) : searchQuery.length >= 2 ? (
                   <div className={cn(
-                    "p-4 text-center",
+                    "p-3 text-center text-sm",
                     theme === "dark" ? "text-slate-400" : "text-gray-500"
                   )}>
-                    No results found
+                    Tidak ada hasil
                   </div>
                 ) : null}
               </div>
@@ -181,14 +192,14 @@ export function AdminHeader({ collapsed }: AdminHeaderProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
           {/* Theme Toggle */}
           <Button
             variant="ghost"
             size="icon"
             onClick={toggleTheme}
             className={cn(
-              "transition-colors",
+              "transition-colors h-9 w-9",
               theme === "dark" 
                 ? "text-slate-400 hover:text-white hover:bg-slate-700" 
                 : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
@@ -200,9 +211,9 @@ export function AdminHeader({ collapsed }: AdminHeaderProps) {
           {/* Notifications */}
           <Button 
             variant="ghost" 
-            size="icon" 
+            size="icon"
             className={cn(
-              "relative transition-colors",
+              "relative transition-colors h-9 w-9",
               theme === "dark" 
                 ? "text-slate-400 hover:text-white hover:bg-slate-700" 
                 : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
@@ -213,22 +224,24 @@ export function AdminHeader({ collapsed }: AdminHeaderProps) {
           </Button>
 
           {/* User Menu */}
-          <div className="flex items-center gap-3">
-            <div className="text-right hidden sm:block">
+          <div className="flex items-center gap-2 sm:gap-3 ml-1 sm:ml-2">
+            <div className={cn(
+              "text-right hidden sm:block"
+            )}>
               <p className={cn(
                 "text-sm font-medium",
                 theme === "dark" ? "text-white" : "text-gray-900"
               )}>
-                Administrator
+                Admin
               </p>
               <p className={cn(
                 "text-xs",
                 theme === "dark" ? "text-slate-400" : "text-gray-500"
               )}>
-                System Admin
+                Administrator
               </p>
             </div>
-            <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center">
+            <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
               <User className="h-4 w-4 text-white" />
             </div>
             <Button
@@ -236,7 +249,7 @@ export function AdminHeader({ collapsed }: AdminHeaderProps) {
               size="icon"
               onClick={handleSignOut}
               className={cn(
-                "transition-colors",
+                "transition-colors h-9 w-9",
                 theme === "dark" 
                   ? "text-slate-400 hover:text-white hover:bg-slate-700" 
                   : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
